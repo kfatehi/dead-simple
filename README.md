@@ -15,4 +15,4 @@ Open the `public/` dir to see the result.
 * Write your code in `app` dir.
 * Put static files that should be copied (index.html etc) to `app/assets`.
 * Manage dependencies with [Bower](http://bower.io) or simply put
-  third-party styles & scripts in `vendor` dir.
+  third-party styles & scripts in `vendor` dir. [Screenshot](http://cl.ly/image/0v1M3n2m2w3c)
