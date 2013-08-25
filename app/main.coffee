@@ -12,5 +12,5 @@
 # http://www.fabiobiondi.com/blog/2012/08/createjs-and-html5-canvas-resize-fullscreen-and-liquid-layouts/
 window.App =
   init: ->
-    for k,v of treeData
-      $('body').append("<div>#{k}:#{v}</div>")
+    if treeData?
+      $('body').append('tree data loaded!')
