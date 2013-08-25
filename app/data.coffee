@@ -1,0 +1,2 @@
+window.treeData = 
+  foo: 'bar'
