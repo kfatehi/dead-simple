@@ -1,63 +1,61 @@
 window.App =
   init: ->
-    @options =
-      maxLabelLength: 10
-      nodeRadius: 5
-      fontSize: 12
-    @size = 
-      width: innerWidth
-      height: innerHeight
-    @build_layout treeData, (d) ->
-      if (!d.contents || d.contents.length is 0) then null else d.contents
-    @render_tree $('g#container').get(0)
+    padding = 30
+    w = innerWidth - padding
+    h = innerHeight - padding
 
-  build_layout: (data, cb) ->
-    @tree = d3.layout.tree().sort(null)
-      .size([@size.height, @size.width - @options.maxLabelLength * @options.fontSize])
-      .children (d) -> cb(d)
-    @nodes = @tree.nodes(data)
-    @links = @tree.links(@nodes)
+    # Random data set
+    dataset = []
+    numDataPoints = 50
+    xRange = Math.random() * 1000
+    yRange = Math.random() * 1000
+    for i in [0..numDataPoints] by 1
+      dataset.push [
+        Math.round(Math.random() * xRange)
+        Math.round(Math.random() * yRange)
+      ]
 
-  render_tree: (target) ->
-    layoutRoot = d3.select(target).append("svg:svg")
-      .attr("width", @size.width).attr("height", @size.height)
-      .append("svg:g")
-      .attr("class", "container")
-      .attr("transform", "translate(#{@options.maxLabelLength},0)")
 
-    # Edges between nodes as a <path class="link" />
-    link = d3.svg.diagonal().projection (d) -> [d.y, d.x]
+    #Create scale functions
+    xScale = d3.scale.linear().domain([0, d3.max(dataset, (d) ->
+      d[0]
+    )]).range([padding, w - padding * 2])
+    yScale = d3.scale.linear().domain([0, d3.max(dataset, (d) ->
+      d[1]
+    )]).range([h - padding, padding])
+    rScale = d3.scale.linear().domain([0, d3.max(dataset, (d) ->
+      d[1]
+    )]).range([2, 5])
 
-    layoutRoot.selectAll("path.link")
-      .data(@links)
-      .enter()
-      .append("svg:path")
-      .attr("class", "link")
-      .attr("d", link)
+    #Define X axis
+    xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5)
 
-    # Nodes as
-    # <g class="node">
-    #   <circle class="node-dot" />
-    #   <text />
-    # </g>
-    nodeGroup = layoutRoot.selectAll("g.node")
-      .data(@nodes)
-      .enter()
-      .append("svg:g")
-      .attr("class", "node")
-      .attr "transform", (d) ->
-        "translate(#{d.y}, #{d.x})"
+    #Define Y axis
+    yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(5)
 
-    nodeGroup.append("svg:circle")
-      .attr("class", "node-dot")
-      .attr("r", @options.nodeRadius)
+    #Create SVG element
+    svg = d3.select("body").append("svg").attr("width", w).attr("height", h)
 
-    nodeGroup.append("svg:text")
-      .attr("text-anchor", (d) ->
-        if d.children then "end" else "start"
-      ).attr("dx", (d) =>
-        gap = 2 * @options.nodeRadius
-        if d.children then -gap else gap
-      ).attr("dy", 3)
-        .text (d) -> d.name
+    #Create circles
+    svg.selectAll("circle").data(dataset).enter().append("circle").attr("cx", (d) ->
+      xScale d[0]
+    ).attr("cy", (d) ->
+      yScale d[1]
+    ).attr "r", (d) ->
+      rScale d[1]
 
+
+    #Create labels
+    #svg.selectAll("text").data(dataset).enter().append("text").text((d) ->
+    #  d[0] + "," + d[1]
+    #).attr("x", (d) ->
+    #  xScale d[0]
+    #).attr("y", (d) ->
+    #  yScale d[1]
+    #).attr("font-family", "sans-serif").attr("font-size", "11px").attr "fill", "red"
+
+    #Create X axis
+    svg.append("g").attr("class", "axis").attr("transform", "translate(0,#{h - padding})").call xAxis
+
+    #Create Y axis
+    svg.append("g").attr("class", "axis").attr("transform", "translate(#{padding},0)").call yAxis
