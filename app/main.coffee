@@ -9,7 +9,7 @@ window.App =
       height: innerHeight
     @build_layout treeData, (d) ->
       if (!d.contents || d.contents.length is 0) then null else d.contents
-    @render_tree $('g.container').get(0)
+    @render_tree $('g#container').get(0)
 
   build_layout: (data, cb) ->
     @tree = d3.layout.tree().sort(null)
@@ -18,8 +18,8 @@ window.App =
     @nodes = @tree.nodes(data)
     @links = @tree.links(@nodes)
 
-  render_tree: (canvas) ->
-    layoutRoot = d3.select(canvas).append("svg:svg")
+  render_tree: (target) ->
+    layoutRoot = d3.select(target).append("svg:svg")
       .attr("width", @size.width).attr("height", @size.height)
       .append("svg:g")
       .attr("class", "container")

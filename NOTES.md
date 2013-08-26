@@ -22,3 +22,9 @@
 #
 # This is cool
 # http://mbostock.github.io/d3/talk/20111116/pack-hierarchy.html 
+#
+# d3 playground
+# http://phrogz.net/js/d3-playground/
+#
+# d3 tutorials
+# http://alignedleft.com/tutorials/d3/
