@@ -19,3 +19,6 @@
 # 
 # Adding this for later: 
 # https://github.com/aurajs/aura
+#
+# This is cool
+# http://mbostock.github.io/d3/talk/20111116/pack-hierarchy.html 
